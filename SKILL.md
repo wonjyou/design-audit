@@ -265,6 +265,33 @@ After delivering the report, offer:
 2. A revised version of specific copy (UX copy improvements)
 3. A checklist version of findings for dev handoff
 4. Re-evaluation after revisions are made
+5. Export as a visual HTML report — open in your browser and use File → Print → Save as PDF
+
+---
+
+## Step 6: Export as HTML Report
+
+**Trigger:** User selects option 5 from Step 5, or uses language like "export", "PDF", "generate report", "HTML report". If the user uses ambiguous save language (e.g., "save that", "save this") without clearly indicating they want an HTML file, ask: "Did you want to export this as a visual HTML report for PDF printing?"
+
+Do not run this step unless the Step 4 audit report has already been delivered in this session.
+
+**Instructions:**
+
+1. Read `references/report-template.md` for exact color values, component specs, section order, CSS class names, and print rules. Follow it precisely.
+2. Compose the full HTML document using the audit report content delivered in Step 4. Do not re-run the audit — reuse the findings already produced.
+3. **Screenshot handling** (self-containment is the goal):
+   - If a Figma screenshot URL was returned by the Figma MCP during this audit session:
+     - Attempt to fetch and base64-encode the image using the Bash tool:
+       - macOS: `curl -s "[url]" | base64`
+       - Linux: `curl -s "[url]" | base64 -w 0`
+       - Windows/Git Bash: `curl -s "[url]" | base64 -w 0`
+     - Detect the image MIME type from the URL (look for `.jpg`/`.jpeg` → `image/jpeg`, `.webp` → `image/webp`, otherwise assume `image/png`). Embed as `<img src="data:[mime-type];base64,[encoded]" alt="Design screenshot" style="max-width:100%; border-radius:8px; margin-bottom:24px; display:block;">` immediately after the Summary block.
+     - If the Bash tool is unavailable or the `curl` fetch fails, fall back to embedding the URL directly: `<img src="[url]" alt="Design screenshot" style="max-width:100%; border-radius:8px; margin-bottom:24px; display:block;">`. Add an HTML comment above it: `<!-- Note: image URL expires in ~7 days -->`.
+   - If the audit was performed on a static uploaded image (no Figma URL), omit the screenshot element entirely.
+4. Write the HTML file to the current working directory using the Write tool. Filename: `design-audit-report-YYYY-MM-DD.html` (today's date in ISO 8601 format, e.g. `design-audit-report-2026-03-27.html`).
+5. Confirm to the user:
+   > "Report saved to `design-audit-report-YYYY-MM-DD.html`. Open it in your browser, then File → Print → Save as PDF."
+6. If the Write tool is unavailable, inform the user and offer to display the full HTML in a code block so they can copy-paste it manually.
 
 ---
 
