@@ -79,13 +79,13 @@ Context-enriched modifiers are also applied when your description includes domai
 ## Report Format
 
 The output includes:
-- **Design Summary** — interface type, purpose, assumed user context
-- **Context Profile** — the context profile applied and any active modifiers
-- **Overall Impression** — strengths and top area for improvement
-- **Findings by Category** — each finding with What / Why it matters / Suggestion
-- **Priority Summary Table** — all findings ranked by severity
-- **Quick Wins** — 3–5 high-impact, low-effort improvements
-- **Strengths to Preserve** — what's working well and should stay
+- **Design Summary**: interface type, purpose, assumed user context
+- **Context Profile**: the context profile applied and any active modifiers
+- **Overall Impression**: strengths and top area for improvement
+- **Findings by Category**: each finding with What / Why it matters / Suggestion
+- **Priority Summary Table**: all findings ranked by severity
+- **Quick Wins**: 3–5 high-impact, low-effort improvements
+- **Strengths to Preserve**: what's working well and should stay
 
 ## Follow-Up Options
 
