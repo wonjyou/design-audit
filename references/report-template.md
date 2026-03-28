@@ -2,12 +2,28 @@
 
 This file is a style and structure guide for HTML report generation. It is not actual HTML — it defines the exact values, specs, and CSS class names the agent uses when composing the HTML output in Step 6.
 
+The **canonical scaffold** is `references/report-template.html`. When generating a report, copy that file as the starting point and fill in the placeholder content.
+
+---
+
+## Font
+
+Google Inter via `<link>` in `<head>`:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+```
+
+Font stack: `'Inter', system-ui, -apple-system, "Segoe UI", sans-serif`
+
 ---
 
 ## Color Tokens
 
 ```
-Severity colors (left-border, badge backgrounds, and text):
+Severity colors (badge backgrounds and text):
   Critical:  border #ef4444  |  background #fef2f2  |  text #991b1b
   Major:     border #f97316  |  background #fff7ed  |  text #9a3412
   Minor:     border #eab308  |  background #fefce8  |  text #713f12
@@ -19,9 +35,12 @@ Neutral palette:
   Card border:        #e2e8f0
   Heading text:       #0f172a
   Body text:          #334155
-  Secondary text:     #333333
+  Finding body text:  #475569
+  Secondary text:     #64748b
+  Tertiary text:      #94a3b8
   Accent (header):    #1f1f1f
   Accent light:       #ede9fe
+  Divider light:      #f1f5f9
 ```
 
 ---
@@ -29,24 +48,31 @@ Neutral palette:
 ## Typography
 
 ```
-Font stack: system-ui, -apple-system, "Segoe UI", sans-serif
-Font sizes:
-  Page title:          28px, weight 700, color #0f172a
-  Section heading:     18px, weight 600, color #0f172a
-  Category heading:    18px, weight 600, color #0f172a
-  Finding title:       14px, weight 600, color #0f172a
-  Body / labels:       14px, weight 400, color #334155
-  Secondary / meta:    12px, weight 400, color #64748b
-  Table header:        12px, weight 600, color #64748b, uppercase, letter-spacing 0.05em
-  Table cell:          13px, weight 400, color #334155
-Line height: 1.6 for body, 1.3 for headings
+Font: Inter
+Base body size: 16px
+
+Scale:
+  Header title:              22px, weight 700, color #ffffff
+  Category heading:          22px, weight 700, color #0f172a, letter-spacing -0.02em
+  Section heading:           22px, weight 700, color #0f172a, letter-spacing -0.02em
+  Finding title:             17px, weight 600, color #0f172a, letter-spacing -0.01em
+  Quick wins/strengths head: 18px, weight 700
+  Summary value:             15px, weight 400, color #334155
+  Finding body:              15px, weight 400, color #475569
+  Table cell:                14px, weight 400, color #334155
+  Tally pill:                14px, weight 600
+  Summary label:             11px, weight 700, color #94a3b8, uppercase, letter-spacing 0.08em
+  Table header:              11px, weight 700, color #94a3b8, uppercase, letter-spacing 0.06em
+  Finding label:             12px, weight 700, color #64748b, uppercase, letter-spacing 0.05em
+  Severity badge:            12px, weight 700
+  Date / footer:             13px, weight 500
+
+Line height: 1.6 body, 1.65 summary/finding text, 1.2 headings
 ```
 
 ---
 
 ## Document Shell
-
-The generated HTML file uses this structure. All CSS is inline in `<style>` — no external stylesheets.
 
 ```html
 <!DOCTYPE html>
@@ -54,9 +80,12 @@ The generated HTML file uses this structure. All CSS is inline in `<style>` — 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Design Critique Report — [Design Name]</title>
+  <title>Design Audit Report — [Design Name]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* All CSS inline — use color tokens, typography, and component specs in this file */
+    /* All CSS inline — see component specs in this file and report-template.html */
   </style>
 </head>
 <body>
@@ -66,6 +95,8 @@ The generated HTML file uses this structure. All CSS is inline in `<style>` — 
     <!-- <img> screenshot element if available — omit entirely if not -->
     <div class="severity-tally">...</div>
     <!-- .category-section divs, one per audit category -->
+    <h2 class="section-heading">Priority Summary</h2>
+    <hr class="section-divider">
     <table class="priority-table">...</table>
     <div class="quick-wins">...</div>
     <div class="strengths">...</div>
@@ -75,8 +106,8 @@ The generated HTML file uses this structure. All CSS is inline in `<style>` — 
 </html>
 ```
 
-Container (`.container`): `max-width: 900px`, `margin: 0 auto`, `padding: 40px 24px`.
-Page `body`: `background: #f8fafc`, `margin: 0`.
+Container (`.container`): `max-width: 900px`, `margin: 0 auto`, `padding: 48px 40px`.
+Page `body`: `background: #f8fafc`, `margin: 0`, `font-size: 16px`.
 
 ---
 
@@ -89,7 +120,7 @@ Always output sections in this exact order:
 3. Screenshot — `<img>` (only if available; omit entirely if not)
 4. Severity tally bar — `.severity-tally`
 5. Findings by Category — one `.category-section` per audit category
-6. Priority Summary Table — `.priority-table`
+6. Priority Summary heading + table — `.section-heading` + `.priority-table`
 7. Quick Wins — `.quick-wins`
 8. Strengths to Preserve — `.strengths`
 9. Footer — `.report-footer`
@@ -100,36 +131,36 @@ Always output sections in this exact order:
 
 ### Header Bar — CSS class: `header-bar`
 
-`background: #7c3aed`, `padding: 24px 40px`, `margin-bottom: 32px`.
+`background: #1f1f1f`, `padding: 24px 40px`.
 `display: flex`, `justify-content: space-between`, `align-items: center`.
 
-Left: "Design Critique Report" in `#ffffff`, 22px, weight 700.
-Right: "Generated [YYYY-MM-DD]" in `#ede9fe`, 13px.
+Left: "Design Audit Report" in `#ffffff`, 22px, weight 700, `letter-spacing: -0.01em`.
+Right: `[MM/DD/YYYY]` (today's date formatted as month/day/year) in `#94a3b8`, 13px, weight 500.
 
 ---
 
 ### Summary Block — CSS class: `summary-block`
 
-`background: #ffffff`, `border: 1px solid #e2e8f0`, `border-radius: 12px`, `padding: 24px`, `margin-bottom: 24px`.
+`background: #ffffff`, `border: 1px solid #e2e8f0`, `border-radius: 12px`, `padding: 0 32px`, `margin-bottom: 32px`.
 
-Three rows. Each row: `display: flex`, `align-items: flex-start`, `gap: 16px`, `padding: 8px 0`, `border-bottom: 1px solid #f1f5f9`. No border on the last row.
+Three rows. Each row: `display: flex`, `align-items: flex-start`, `gap: 32px`, `padding: 20px 0`, `border-bottom: 1px solid #f1f5f9`. No border on the last row.
 
-- Label: `font-size: 12px`, `font-weight: 600`, `color: #64748b`, `text-transform: uppercase`, `letter-spacing: 0.05em`, `min-width: 160px`, `flex-shrink: 0`
-- Value: `font-size: 14px`, `color: #334155`
+- Label: `font-size: 11px`, `font-weight: 700`, `color: #94a3b8`, `text-transform: uppercase`, `letter-spacing: 0.08em`, `min-width: 148px`, `flex-shrink: 0`, `padding-top: 4px`
+- Value: `font-size: 15px`, `color: #334155`, `line-height: 1.65`
 
 Row labels (in order): `DESIGN SUMMARY` / `CONTEXT PROFILE` / `OVERALL IMPRESSION`
 
-The OVERALL IMPRESSION value uses `font-style: italic`.
+The OVERALL IMPRESSION value uses `font-style: italic`, `color: #475569`.
 
 ---
 
 ### Screenshot
 
-If a Figma screenshot is available (base64 data URI or direct URL):
+If a Figma screenshot URL or base64 data URI is available:
 
 ```html
 <img src="[data-uri-or-url]" alt="Design screenshot"
-     style="max-width:100%; border-radius:8px; margin-bottom:24px; display:block;">
+     style="max-width:100%; border-radius:8px; margin-bottom:32px; display:block; border:1px solid #e2e8f0;">
 ```
 
 If not available, omit this element entirely — no placeholder, no empty space.
@@ -138,77 +169,87 @@ If not available, omit this element entirely — no placeholder, no empty space.
 
 ### Severity Tally Bar — CSS class: `severity-tally`
 
-`display: flex`, `flex-wrap: wrap`, `gap: 12px`, `margin-bottom: 32px`.
+`display: flex`, `flex-wrap: wrap`, `gap: 10px`, `margin-bottom: 48px`.
 
-Four pill badges. Each: `padding: 6px 16px`, `border-radius: 9999px`, `font-size: 13px`, `font-weight: 600`.
+Four pill badges. Each: `padding: 7px 20px`, `border-radius: 9999px`, `font-size: 14px`, `font-weight: 600`, `letter-spacing: -0.01em`.
 Use severity background and text colors from the Color Tokens section.
 
 Format (left to right): `🔴 N Critical` / `🟠 N Major` / `🟡 N Minor` / `🔵 N Cosmetic`
 
-Count N by tallying all findings across all categories from the Step 4 report.
+Count N by tallying all findings across all categories.
 
 ---
 
 ### Category Section — CSS class: `category-section`
 
-One wrapper `<div class="category-section">` per audit category.
+One wrapper `<div class="category-section">` per audit category. `margin-bottom: 56px`.
 
-Category heading inside: `font-size: 18px`, `font-weight: 600`, `color: #0f172a`, `margin-top: 40px`, `margin-bottom: 8px`. For the first `.category-section` only, use `margin-top: 8px` to avoid stacking with the `margin-bottom: 32px` already on `.severity-tally`.
-Followed by `<hr style="border: none; border-bottom: 2px solid #e2e8f0; margin-bottom: 16px;">`.
+Category heading: `font-size: 22px`, `font-weight: 700`, `color: #0f172a`, `letter-spacing: -0.02em`, `margin-bottom: 6px`.
+Followed by `<hr class="category-divider">`: `border-bottom: 2px solid #e2e8f0`, `margin-bottom: 28px`.
 
-Each finding within the category: CSS class `finding-card`.
+Each finding within the category: CSS class `finding-item`.
 
 ```html
-<div class="finding-card">
+<div class="finding-item">
   <div class="finding-header">
-    <span class="severity-badge">[emoji + label]</span>
+    <span class="severity-badge badge-[level]">[emoji + label]</span>
     <span class="finding-title">[Finding Title]</span>
   </div>
-  <div class="finding-body">
-    <p><span class="finding-label">What:</span> [description]</p>
-    <p><span class="finding-label">Why it matters:</span> [rationale]</p>
-    <p><span class="finding-label">Suggestion:</span> <em>[fix]</em></p>
-  </div>
+  <ul class="finding-bullets">
+    <li><span class="finding-label">What</span> [description]</li>
+    <li><span class="finding-label">Why it matters</span> [rationale]</li>
+    <li><span class="finding-label">Suggestion</span> <em>[fix]</em></li>
+  </ul>
 </div>
 ```
 
-Finding card styles:
-- `background: [severity background color]`
-- `border-left: 4px solid [severity border color]`
-- `border-radius: 8px`
-- `padding: 16px 20px`
-- `margin-bottom: 12px`
+Finding item styles:
+- `margin-bottom: 32px`, `padding-bottom: 32px`, `border-bottom: 1px solid #f1f5f9`
+- Last `.finding-item` in a section: `border-bottom: none`, `margin-bottom: 0`, `padding-bottom: 0`
 
-`.finding-header`: `display: flex`, `align-items: center`, `gap: 10px`, `margin-bottom: 10px`.
-`.finding-title`: `font-size: 14px`, `font-weight: 600`, `color: #0f172a`.
-`.finding-label`: `font-weight: 600`, `color: #64748b`, `font-size: 13px`.
-`.severity-badge`: severity background + text colors from tokens, `padding: 2px 10px`, `border-radius: 9999px`, `font-size: 12px`, `font-weight: 600`, `white-space: nowrap`.
+`.finding-header`: `display: flex`, `align-items: center`, `gap: 12px`, `margin-bottom: 14px`.
+`.finding-title`: `font-size: 17px`, `font-weight: 600`, `color: #0f172a`, `letter-spacing: -0.01em`.
+
+`.finding-bullets`: `list-style: none`, `padding: 0`, `display: flex`, `flex-direction: column`, `gap: 10px`, `padding-left: 4px`.
+`.finding-bullets li`: `font-size: 15px`, `color: #475569`, `line-height: 1.65`, `padding-left: 20px`, `position: relative`.
+`.finding-bullets li::before`: `content: "–"`, `position: absolute`, `left: 0`, `color: #cbd5e1`, `font-weight: 600`.
+
+`.finding-label`: `font-weight: 700`, `color: #64748b`, `font-size: 12px`, `text-transform: uppercase`, `letter-spacing: 0.05em`, `margin-right: 6px`.
+
+`.severity-badge`: severity background + text colors from tokens, `padding: 3px 12px`, `border-radius: 9999px`, `font-size: 12px`, `font-weight: 700`, `white-space: nowrap`, `display: inline-flex`, `align-items: center`, `flex-shrink: 0`.
 
 ---
 
-### Priority Summary Table — CSS class: `priority-table` (on `<table>`)
+### Priority Summary Table
 
-`width: 100%`, `border-collapse: collapse`, `margin-bottom: 40px`.
+Precede with `<h2 class="section-heading">Priority Summary</h2>` and `<hr class="section-divider">`.
 
-`<thead>` row: `background: #f1f5f9`.
-`<th>` cells: `font-size: 12px`, `font-weight: 600`, `color: #64748b`, `text-transform: uppercase`, `letter-spacing: 0.05em`, `padding: 12px 16px`, `text-align: left`.
+`.section-heading`: `font-size: 22px`, `font-weight: 700`, `color: #0f172a`, `letter-spacing: -0.02em`, `margin-bottom: 6px`.
+`.section-divider`: `border-bottom: 2px solid #e2e8f0`, `margin-bottom: 24px`.
+
+CSS class: `priority-table` (on `<table>`)
+
+`width: 100%`, `border-collapse: collapse`, `margin-bottom: 56px`.
+
+`<thead>` row: `background: #f8fafc`, `border-bottom: 2px solid #e2e8f0`.
+`<th>` cells: `font-size: 11px`, `font-weight: 700`, `color: #94a3b8`, `text-transform: uppercase`, `letter-spacing: 0.06em`, `padding: 12px 16px`, `text-align: left`.
 Columns: `#` | `Severity` | `Category` | `Finding` | `Suggested Fix`
 
 `<tbody>` rows: alternating `background: #ffffff` (odd) / `#f8fafc` (even).
-`<td>` cells: `padding: 12px 16px`, `font-size: 13px`, `color: #334155`, `border-bottom: 1px solid #e2e8f0`.
+`<td>` cells: `padding: 13px 16px`, `font-size: 14px`, `color: #334155`, `border-bottom: 1px solid #e2e8f0`, `vertical-align: top`, `line-height: 1.5`.
 
-Severity column: use severity text color from tokens (no background in table cells — text color only).
+Severity column: use severity text color from tokens, `font-weight: 600`. No background in table cells.
 
 ---
 
 ### Quick Wins Box — CSS class: `quick-wins`
 
-`background: #f0fdf4`, `border: 1px solid #bbf7d0`, `border-radius: 12px`, `padding: 24px`, `margin-bottom: 24px`.
+`background: #f0fdf4`, `border: 1px solid #bbf7d0`, `border-radius: 12px`, `padding: 28px 32px`, `margin-bottom: 24px`.
 
-Heading: "Quick Wins", `color: #166534`, `font-size: 16px`, `font-weight: 600`, `margin-bottom: 12px`.
-Numbered list (`<ol>`): `font-size: 14px`, `color: #334155`, `line-height: 1.6`, `padding-left: 20px`.
+Heading: "Quick Wins", `color: #166534`, `font-size: 18px`, `font-weight: 700`, `letter-spacing: -0.02em`, `margin-bottom: 16px`.
+Numbered list (`<ol>`): `font-size: 15px`, `color: #334155`, `line-height: 1.7`, `padding-left: 22px`, items with `gap: 8px` via flex column.
 
-**Empty state:** If no Quick Wins were identified, render instead of the list:
+**Empty state:** If no Quick Wins were identified:
 ```html
 <p style="color:#64748b; font-style:italic;">No quick wins were identified in this audit.</p>
 ```
@@ -218,12 +259,12 @@ Do not omit the section box.
 
 ### Strengths to Preserve Box — CSS class: `strengths`
 
-`background: #eff6ff`, `border: 1px solid #bfdbfe`, `border-radius: 12px`, `padding: 24px`, `margin-bottom: 40px`.
+`background: #eff6ff`, `border: 1px solid #bfdbfe`, `border-radius: 12px`, `padding: 28px 32px`, `margin-bottom: 56px`.
 
-Heading: "Strengths to Preserve", `color: #1e40af`, `font-size: 16px`, `font-weight: 600`, `margin-bottom: 12px`.
-Bulleted list (`<ul>`): `font-size: 14px`, `color: #334155`, `line-height: 1.6`, `padding-left: 20px`.
+Heading: "Strengths to Preserve", `color: #1e40af`, `font-size: 18px`, `font-weight: 700`, `letter-spacing: -0.02em`, `margin-bottom: 16px`.
+Bulleted list (`<ul>`): `font-size: 15px`, `color: #334155`, `line-height: 1.7`, `padding-left: 22px`, items with `gap: 8px`.
 
-**Empty state:** If no Strengths were identified, render instead of the list:
+**Empty state:** If no Strengths were identified:
 ```html
 <p style="color:#64748b; font-style:italic;">No standout strengths were identified in this audit.</p>
 ```
@@ -233,8 +274,8 @@ Do not omit the section box.
 
 ### Footer — CSS class: `report-footer`
 
-`border-top: 1px solid #e2e8f0`, `padding-top: 16px`, `margin-top: 40px`, `text-align: center`.
-Text: "Design Critique by WJY Studios", `font-size: 12px`, `color: #333`.
+`border-top: 1px solid #e2e8f0`, `padding-top: 20px`, `text-align: center`.
+Text: "Design Report Skill created by WJY Studios", `font-size: 13px`, `color: #94a3b8`, `font-weight: 500`.
 
 ---
 
@@ -242,37 +283,36 @@ Text: "Design Critique by WJY Studios", `font-size: 12px`, `color: #333`.
 
 ```css
 @media print {
-  body { background: white; }
+  body { background: white; font-size: 14px; }
 
   .header-bar {
     background: white !important;
-    color: #0f172a !important;
     border-bottom: 2px solid #e2e8f0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
+  .header-bar .title { color: #0f172a !important; }
+  .header-bar .date  { color: #64748b  !important; }
 
-  .header-bar * {
-    color: #0f172a !important;
-  }
+  .container { padding: 24px 0; }
 
-  .finding-card {
-    break-inside: avoid;
-  }
+  .finding-item     { break-inside: avoid; }
+  .category-section { break-before: auto; }
 
-  .category-section {
-    break-before: auto;
-  }
-
-  .priority-table tbody tr {
-    break-inside: avoid;
-  }
-
-  .priority-table thead {
-    display: table-header-group;
-  }
+  .priority-table tbody tr { break-inside: avoid; }
+  .priority-table thead    { display: table-header-group; }
 
   .quick-wins,
-  .strengths {
-    break-inside: avoid;
+  .strengths { break-inside: avoid; }
+
+  /* Preserve severity colors in print */
+  .tally-pill, .severity-badge,
+  .sev-critical, .sev-major, .sev-minor, .sev-cosmetic,
+  .tally-critical, .tally-major, .tally-minor, .tally-cosmetic,
+  .badge-critical, .badge-major, .badge-minor, .badge-cosmetic,
+  .quick-wins, .strengths {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }
 

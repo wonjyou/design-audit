@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Audit Report — [Design Name]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       DESIGN AUDIT REPORT — TEMPLATE SCAFFOLD
+       All CSS is self-contained here. Replace placeholder content
+       (marked with [BRACKETS]) when generating a report.
+    ============================================================ */
+
+    /* --- Reset --- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* --- Base --- */
+    body {
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 16px;
+      background: #f8fafc;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    /* ---- Header Bar ---- */
+    .header-bar {
+      background: #1f1f1f;
+      padding: 24px 40px;
+      margin-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-bar .title {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .header-bar .date {
+      color: #ede9fe;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* ---- Container ---- */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 40px;
+    }
+
+    /* ---- Summary Block ---- */
+    .summary-block {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0 32px;
+      margin-bottom: 32px;
+    }
+    .summary-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+      padding: 20px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+    .summary-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      min-width: 148px;
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
+    .summary-value {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.65;
+    }
+    .summary-value.italic {
+      font-style: italic;
+      color: #475569;
+    }
+
+    /* ---- Screenshot (only rendered when available) ---- */
+    /* img.screenshot {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 32px;
+      display: block;
+      border: 1px solid #e2e8f0;
+    } */
+
+    /* ---- Severity Tally ---- */
+    .severity-tally {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 48px;
+    }
+    .tally-pill {
+      padding: 7px 20px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .tally-critical { background: #fef2f2; color: #991b1b; }
+    .tally-major    { background: #fff7ed; color: #9a3412; }
+    .tally-minor    { background: #fefce8; color: #713f12; }
+    .tally-cosmetic { background: #eff6ff; color: #1e40af; }
+
+    /* ---- Category Section ---- */
+    .category-section {
+      margin-bottom: 56px;
+    }
+    .category-heading {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .category-divider {
+      border: none;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 28px;
+    }
+
+    /* ---- Finding Item (bullet-based) ---- */
+    .finding-item {
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .finding-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .finding-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    /* Severity badges */
+    .severity-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+      flex-shrink: 0;
+    }
+    .badge-critical { background: #fef2f2; color: #991b1b; }
+    .badge-major    { background: #fff7ed; color: #9a3412; }
+    .badge-minor    { background: #fefce8; color: #713f12; }
+    .badge-cosmetic { background: #eff6ff; color: #1e40af; }
+
+    .finding-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+    }
+
+    /* Bullet list inside each finding */
+    .finding-bullets {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-left: 4px;
+    }
+    .finding-bullets li {
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.65;
+      padding-left: 20px;
+      position: relative;
+    }
+    .finding-bullets li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+    .finding-label {
+      font-weight: 600;
+      color: #64748b;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-right: 6px;
+    }
+
+    /* ---- Priority Summary Table ---- */
+    .section-heading {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .section-divider {
+      border: none;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 24px;
+    }
+
+    .priority-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 56px;
+    }
+    .priority-table thead tr {
+      background: #f8fafc;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .priority-table th {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 12px 16px;
+      text-align: left;
+    }
+    .priority-table tbody tr:nth-child(odd)  { background: #ffffff; }
+    .priority-table tbody tr:nth-child(even) { background: #f8fafc; }
+    .priority-table tbody tr:hover { background: #f1f5f9; }
+    .priority-table td {
+      padding: 13px 16px;
+      font-size: 14px;
+      color: #334155;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .sev-critical { color: #991b1b; font-weight: 600; }
+    .sev-major    { color: #9a3412; font-weight: 600; }
+    .sev-minor    { color: #713f12; font-weight: 600; }
+    .sev-cosmetic { color: #1e40af; font-weight: 600; }
+
+    /* ---- Quick Wins ---- */
+    .quick-wins {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+    }
+    .quick-wins h2 {
+      color: #166534;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .quick-wins ol {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.7;
+      padding-left: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* ---- Strengths ---- */
+    .strengths {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 56px;
+    }
+    .strengths h2 {
+      color: #1e40af;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .strengths ul {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.7;
+      padding-left: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* ---- Footer ---- */
+    .report-footer {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    /* ---- Print Rules ---- */
+    @media print {
+      body { background: white; font-size: 14px; }
+
+      .header-bar {
+        background: white !important;
+        border-bottom: 2px solid #e2e8f0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .header-bar .title { color: #0f172a !important; }
+      .header-bar .date  { color: #64748b  !important; }
+
+      .container { padding: 24px 0; }
+
+      .finding-item    { break-inside: avoid; }
+      .category-section { break-before: auto; }
+
+      .priority-table tbody tr { break-inside: avoid; }
+      .priority-table thead    { display: table-header-group; }
+
+      .quick-wins,
+      .strengths { break-inside: avoid; }
+
+      .tally-pill,
+      .severity-badge,
+      .sev-critical, .sev-major, .sev-minor, .sev-cosmetic,
+      .tally-critical, .tally-major, .tally-minor, .tally-cosmetic,
+      .badge-critical, .badge-major, .badge-minor, .badge-cosmetic,
+      .quick-wins, .strengths {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    @page {
+      margin: 1.5cm;
+      size: A4;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER BAR
+     Left: report title | Right: generated date
+============================================================ -->
+<div class="header-bar">
+  <span class="title">Design Audit Report</span>
+  <span class="date">[MM/DD/YYYY]</span>
+</div>
+
+<div class="container">
+
+  <!-- ============================================================
+       SUMMARY BLOCK
+       Three rows: Design Summary / Context Profile / Overall Impression
+  ============================================================ -->
+  <div class="summary-block">
+    <div class="summary-row">
+      <span class="summary-label">Design Summary</span>
+      <span class="summary-value">[Brief description of the interface: type, apparent purpose, user context, and screen content.]</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Context Profile</span>
+      <span class="summary-value">[Context profile applied. E.g., "Web App (SaaS Dashboard) — web-app profile with B2B context modifiers."]</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Overall Impression</span>
+      <span class="summary-value italic">[2–3 sentences: what the design does well, and the most pressing area for improvement.]</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SCREENSHOT
+       Only include if a Figma screenshot URL or base64 data URI is available.
+       If not available, delete this element entirely — no placeholder.
+  ============================================================ -->
+  <!-- <img class="screenshot" src="[data:image/png;base64,... OR url]" alt="Design screenshot"> -->
+
+  <!-- ============================================================
+       SEVERITY TALLY
+       Count all findings across all categories. Update N values.
+  ============================================================ -->
+  <div class="severity-tally">
+    <span class="tally-pill tally-critical">🔴 0 Critical</span>
+    <span class="tally-pill tally-major">🟠 0 Major</span>
+    <span class="tally-pill tally-minor">🟡 0 Minor</span>
+    <span class="tally-pill tally-cosmetic">🔵 0 Cosmetic</span>
+  </div>
+
+  <!-- ============================================================
+       FINDINGS BY CATEGORY
+       One .category-section per audit category.
+       Each finding uses .finding-item with bullet list structure.
+       Severity classes: badge-critical / badge-major / badge-minor / badge-cosmetic
+  ============================================================ -->
+
+  <!-- Category 1 -->
+  <div class="category-section">
+    <h2 class="category-heading">Visual Design</h2>
+    <hr class="category-divider">
+
+    <div class="finding-item">
+      <div class="finding-header">
+        <span class="severity-badge badge-major">🟠 Major</span>
+        <span class="finding-title">[Finding Title]</span>
+      </div>
+      <ul class="finding-bullets">
+        <li><span class="finding-label">What</span> [Describe the specific issue and where it appears in the design.]</li>
+        <li><span class="finding-label">Why it matters</span> [Reference the relevant principle, standard, or research. Link when possible.]</li>
+        <li><span class="finding-label">Suggestion</span> <em>[The specific, actionable fix.]</em></li>
+      </ul>
+    </div>
+
+    <!-- Add more .finding-item blocks here, in descending severity order -->
+
+  </div>
+
+  <!-- Category 2 -->
+  <div class="category-section">
+    <h2 class="category-heading">UX Design — Usability Heuristics</h2>
+    <hr class="category-divider">
+
+    <div class="finding-item">
+      <div class="finding-header">
+        <span class="severity-badge badge-minor">🟡 Minor</span>
+        <span class="finding-title">[Finding Title]</span>
+      </div>
+      <ul class="finding-bullets">
+        <li><span class="finding-label">What</span> [Description.]</li>
+        <li><span class="finding-label">Why it matters</span> [Rationale.]</li>
+        <li><span class="finding-label">Suggestion</span> <em>[Fix.]</em></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Category 3 -->
+  <div class="category-section">
+    <h2 class="category-heading">UI Design — Patterns</h2>
+    <hr class="category-divider">
+    <!-- findings here -->
+  </div>
+
+  <!-- Category 4 -->
+  <div class="category-section">
+    <h2 class="category-heading">Human Factors</h2>
+    <hr class="category-divider">
+    <!-- findings here -->
+  </div>
+
+  <!-- Category 5 -->
+  <div class="category-section">
+    <h2 class="category-heading">UX Copy</h2>
+    <hr class="category-divider">
+    <!-- findings here -->
+  </div>
+
+  <!-- Category 6 -->
+  <div class="category-section">
+    <h2 class="category-heading">Information Architecture</h2>
+    <hr class="category-divider">
+    <!-- findings here -->
+  </div>
+
+  <!-- ============================================================
+       PRIORITY SUMMARY TABLE
+       All findings from all categories, sorted by severity (Critical → Cosmetic).
+       Use .sev-critical / .sev-major / .sev-minor / .sev-cosmetic on severity <td>.
+  ============================================================ -->
+  <h2 class="section-heading">Priority Summary</h2>
+  <hr class="section-divider">
+  <table class="priority-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Severity</th>
+        <th>Category</th>
+        <th>Finding</th>
+        <th>Suggested Fix</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td class="sev-major">🟠 Major</td>
+        <td>[Category]</td>
+        <td>[Finding summary]</td>
+        <td>[Fix summary]</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td class="sev-minor">🟡 Minor</td>
+        <td>[Category]</td>
+        <td>[Finding summary]</td>
+        <td>[Fix summary]</td>
+      </tr>
+      <!-- Add one row per finding -->
+    </tbody>
+  </table>
+
+  <!-- ============================================================
+       QUICK WINS
+       3–5 high-impact, low-effort improvements.
+       If none identified, replace <ol> with the empty-state paragraph.
+  ============================================================ -->
+  <div class="quick-wins">
+    <h2>Quick Wins</h2>
+    <ol>
+      <li>[Quick win 1]</li>
+      <li>[Quick win 2]</li>
+      <li>[Quick win 3]</li>
+    </ol>
+    <!-- Empty state (use instead of <ol> if no quick wins):
+    <p style="color:#64748b; font-style:italic;">No quick wins were identified in this audit.</p>
+    -->
+  </div>
+
+  <!-- ============================================================
+       STRENGTHS TO PRESERVE
+       1–5 things the design does well that should not be changed.
+       If none identified, replace <ul> with the empty-state paragraph.
+  ============================================================ -->
+  <div class="strengths">
+    <h2>Strengths to Preserve</h2>
+    <ul>
+      <li>[Strength 1]</li>
+      <li>[Strength 2]</li>
+      <li>[Strength 3]</li>
+    </ul>
+    <!-- Empty state (use instead of <ul> if no strengths):
+    <p style="color:#64748b; font-style:italic;">No standout strengths were identified in this audit.</p>
+    -->
+  </div>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <div class="report-footer">
+    Design Report Skill created by WJY Studios
+  </div>
+
+</div>
+</body>
+</html>
